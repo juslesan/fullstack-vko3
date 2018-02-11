@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose')
 
 const url = 'mongodb://fullstack:sekret@ds229388.mlab.com:29388/fullstack-vko3'
@@ -5,31 +6,17 @@ const url = 'mongodb://fullstack:sekret@ds229388.mlab.com:29388/fullstack-vko3'
 mongoose.connect(url)
 mongoose.Promise = global.Promise;
 
-const Note = mongoose.model('Note', {
-  content: String,
-  date: Date,
-  important: Boolean
+const Person = mongoose.model('Person', {
+
+  name: String,
+  number: String
 })
 
-Note
+Person
   .find({})
   .then(result => {
-    result.forEach(note => {
-      console.log(note)
+    result.forEach(person => {
+      console.log(person)
     })
-    mongoose.connection.close()
-  })
-
-
-
-const note = new Note({
-  content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-  date: new Date(),
-  important: false
-})
-note
-  .save()
-  .then(response => {
-    console.log('note saved!')
     mongoose.connection.close()
   })
