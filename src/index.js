@@ -5,13 +5,15 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./Models/person')
+
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 app.use(express.static('build'))
 
-
+/*
 let persons = [
     {
       id: 1,
@@ -29,7 +31,15 @@ let persons = [
       date: '04012334124',
     }
   ]
-  
+*/ 
+
+const formatPerson = (person) => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
+}
   app.get('/info', (req, res) => {
    // res.send(res.Date)
     const date = Date(req.header.date)
@@ -42,13 +52,11 @@ let persons = [
   })
 
   app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
+    Person
+    .findById(request.params.id)
+    .then(person => {
+      response.json(formatPerson(person))
+    })
   })
 
   app.post('/api/persons', (request, response) => {
@@ -68,16 +76,18 @@ let persons = [
     
 
   
-    const person = {
+    const person = new Person ({
       name: body.name,
       number: body.number,
       id: Math.random(10000000)
-    }
-  
-    persons = persons.concat(person)
-  
-    response.json(person)
+    })
+    person
+    .save()
+    .then(savedPerson => {
+      response.json(formatPerson(savedPerson))
+    })
   })
+
 
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -87,8 +97,14 @@ let persons = [
   })
 
   app.get('/api/persons', (req, res) => {
-    res.json(persons)
-  })
+    Person
+    .find({})
+    .then(persons => {
+      response.json(persons.map(formatPerson))
+    })
+})
+
+
   
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
