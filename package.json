@@ -6,7 +6,9 @@
   "scripts": {
     "watch": "nodemon src/index.js",
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "node_modules/.bin/eslint src/"
+
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "morgan": "^1.9.0"
   },
   "devDependencies": {
+    "eslint": "^4.17.0",
     "nodemon": "^1.14.12"
   }
 }
